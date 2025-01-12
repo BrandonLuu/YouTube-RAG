@@ -5,11 +5,11 @@ def get_channel_details(channel_name):
     """
     Fetch channel details using the channels.list endpoint.
     """
+
     try:
         url = "https://www.googleapis.com/youtube/v3/channels"
         params = {
-            "part": "auditDetails,brandingSettings,contentDetails,contentOwnerDetails,id,localizations,snippet,statistics,status,topicDetails",
-            # "part": "snippet,statistics",
+            "part": "snippet,statistics",
             "forHandle": channel_name,
             # "id": channel_id,
             "key": API_KEY,
@@ -47,7 +47,6 @@ def get_last_50_videos(channel_id):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching last 50 videos: {e}")
         print(response.json())
-
         return []
 
 def get_video_stats(video_ids):
@@ -73,24 +72,23 @@ def get_video_stats(video_ids):
 if __name__ == "__main__":
     channel_name = "@Channel5YouTube"
 
-    # Replace with the desired channel ID
-    # CHANNEL_ID = "UC_x5XG1OV2P6uZZ5FSM9Ttw"  # Example: Google Developers Channel
-
-    # Step 2: Get channel details
+    # Step 1: Get channel details
     print("Fetching channel details...")
     channel_details = get_channel_details(channel_name)
+    channel_id = channel_details["items"][0]["id"]
     if channel_details:
         print(channel_details)
+        print(channel_id)
 
-    # # Step 3: Get last 50 videos
-    # print("\nFetching last 50 videos...")
-    # video_ids = get_last_50_videos(channel_id)
-    # if video_ids:
-    #     print("Video IDs:", video_ids)
+    # Step 2: Get last 50 videos
+    print("\nFetching last 50 videos...")
+    video_ids = get_last_50_videos(channel_id)
+    if video_ids:
+        print("Video IDs:", video_ids)
 
-    # # Step 4: Get stats for the videos
-    # print("\nFetching video statistics...")
-    # if video_ids:  # Proceed only if we have video IDs
-    #     video_stats = get_video_stats(video_ids)
-    #     if video_stats:
-    #         print(video_stats)
+    # Step 3: Get stats for the videos
+    print("\nFetching video statistics...")
+    if video_ids:  # Proceed only if we have video IDs
+        video_stats = get_video_stats(video_ids)
+        if video_stats:
+            print(video_stats)
