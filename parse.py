@@ -10,6 +10,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from langgraph.graph import START, StateGraph
 from typing_extensions import List, TypedDict
 
+import pickle
+
 LANGCHAIN_TRACING_V2=True
 LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
 LANGCHAIN_API_KEY="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"
@@ -43,7 +45,6 @@ def parse_with_ollama(dom_chunks, parse_description):
         parsed_results.append(response)
         
     return '\n'.join(parsed_results)
-    
 
 
 # Load and chunk contents of the blog
@@ -57,10 +58,8 @@ loader = WebBaseLoader(
     ),
 )
 docs = loader.load()
-# print(docs)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 all_splits = text_splitter.split_documents(docs)
-# print("splits:", all_splits)
 
 # Index chunks
 _ = vector_store.add_documents(documents=all_splits)
@@ -72,10 +71,8 @@ template = ("""You are an assistant for question-answering tasks. Use the follow
                 Context: {context} 
                 Answer:""")
 prompt = ChatPromptTemplate.from_template(template)
-
-question = "What is the name of the quest?"
+question = "Summarized the article."
 retrieved_docs = vector_store.similarity_search(question)
-print("len:", len(retrieved_docs))
 docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
 prompt = prompt.invoke({"question": question, "context": docs_content})
 answer = llm.invoke(prompt)
