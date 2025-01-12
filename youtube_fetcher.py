@@ -68,10 +68,12 @@ def get_video_stats(video_ids):
         print(response.json())
         return None
 
-
-if __name__ == "__main__":
-    channel_name = "@Channel5YouTube"
-
+def get_channel_analytics(channel_name):
+    """
+    Fetch all channel analytics
+    """
+    channel_analytics = {}
+    
     # Step 1: Get channel details
     print("Fetching channel details...")
     channel_details = get_channel_details(channel_name)
@@ -88,7 +90,16 @@ if __name__ == "__main__":
 
     # Step 3: Get stats for the videos
     print("\nFetching video statistics...")
-    if video_ids:  # Proceed only if we have video IDs
-        video_stats = get_video_stats(video_ids)
-        if video_stats:
-            print(video_stats)
+    if not video_ids: return {}
+    # Proceed only if we have video IDs
+    video_stats = get_video_stats(video_ids)
+    if video_stats:
+        print(video_stats)
+    
+    return channel_analytics
+    
+
+if __name__ == "__main__":
+    channel_name = "@Channel5YouTube"
+    get_channel_analytics(channel_name)
+
