@@ -13,38 +13,30 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pymongo import MongoClient
 from typing_extensions import List, TypedDict
 
-from config import LANGCHAIN_API_KEY 
+from config import LANGCHAIN_API_KEY
 from config import MONGO_DB_PASSWORD
 
-LANGCHAIN_TRACING_V2=True
-LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-LANGCHAIN_PROJECT="bluu-dev"
-
-template = (
-    "You are tasked with extracting specific information from the following text content: {dom_content}. "
-    "Please follow these instructions carefully: \n\n"
-    "1. **Extract Information:** Only extract the information that directly matches the provided description: {parse_description}. "
-    "2. **No Extra Content:** Do not include any additional text, comments, or explanations in your response. "
-    "3. **Empty Response:** If no information matches the description, return an empty string ('')."
-    "4. **Direct Data Only:** Your output should contain only the data that is explicitly requested, with no other text."
-)
+LANGCHAIN_TRACING_V2 = True
+LANGCHAIN_ENDPOINT = "https://api.smith.langchain.com"
+LANGCHAIN_PROJECT = "bluu-dev"
 
 # Embeddings Settings
-embeddings = OllamaEmbeddings(
-    model="llama3.2"
-    # dimensions=4096
-    )
+embeddings = OllamaEmbeddings(model="llama3.2")
 llm = OllamaLLM(model='llama3.2')
 
 # MongoDB Settings
+DB_NAME = "test_db"
+COLLECTION_NAME = "test_embeddings"
+ATLAS_VECTOR_SEARCH_INDEX_NAME = "test_index"
+
 mongo_uri = f"mongodb+srv://admin:{MONGO_DB_PASSWORD}@cluster0.0xcvi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 mongo_client = MongoClient(mongo_uri)
-mongo_collection = mongo_client["test_db"]["test_embeddings"]
+mongo_collection = mongo_client[DB_NAME][COLLECTION_NAME]
 
 vector_store = MongoDBAtlasVectorSearch(
     embedding=embeddings,
     collection=mongo_collection,
-    index_name="test_index",
+    index_name=ATLAS_VECTOR_SEARCH_INDEX_NAME,
     relevance_score_fn="cosine",
 )
 # !! IMPORTANT: EITHER RUN THIS CODE OR DO MANUALLY ON ATLAS UI - FAILS ON DUPE CALLS
@@ -52,21 +44,21 @@ vector_store = MongoDBAtlasVectorSearch(
 # vector_store = InMemoryVectorStore(embeddings)
 
 
-def parse_with_ollama(dom_chunks, parse_description):
-    prompt = ChatPromptTemplate.from_template(template)
-    chain = prompt | llm
-    
-    parsed_results = []
-    
-    for i, chunk in enumerate(dom_chunks, start=1):
-        response = chain.invoke(
-            {'dom_content': chunk, 'parse_description': parse_description}
-        )
-    
-        print(f'Parsed batch {i} of {len(dom_chunks)}')
-        parsed_results.append(response)
-        
-    return '\n'.join(parsed_results)
+# def parse_with_ollama(dom_chunks, parse_description):
+#     prompt = ChatPromptTemplate.from_template(template)
+#     chain = prompt | llm
+
+#     parsed_results = []
+
+#     for i, chunk in enumerate(dom_chunks, start=1):
+#         response = chain.invoke(
+#             {'dom_content': chunk, 'parse_description': parse_description}
+#         )
+
+#         print(f'Parsed batch {i} of {len(dom_chunks)}')
+#         parsed_results.append(response)
+
+#     return '\n'.join(parsed_results)
 
 # Load and chunk contents of the blog
 # loader = WebBaseLoader(
@@ -96,15 +88,14 @@ template = ("""You are an assistant for question-answering tasks. Use the follow
                 Question: {question} 
                 Context: {context} 
                 Answer:""")
-prompt = ChatPromptTemplate.from_template(template)
 
+prompt = ChatPromptTemplate.from_template(template)
 
 query = "Provide a summary of the quest."
 retrieved_docs = vector_store.similarity_search(query)
 # print(f"retrived: {retrieved_docs}")
 # docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
 # print(f"docs: {docs_content}")
-
 
 prompt = prompt.invoke({"question": query, "context": retrieved_docs})
 answer = llm.invoke(prompt)
