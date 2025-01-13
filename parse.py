@@ -5,16 +5,19 @@ from langchain_core.vectorstores import InMemoryVectorStore
 import bs4
 from langchain import hub
 from langchain_community.document_loaders import WebBaseLoader
+# from langchain_.vectorstores import MongoDBAtlasVectorSearch
+from langchain_mongodb import MongoDBAtlasVectorSearch
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from langgraph.graph import START, StateGraph
+from pymongo import MongoClient
 from typing_extensions import List, TypedDict
 
-import pickle
+from config import LANGCHAIN_API_KEY 
+from config import MONGO_DB_PASSWORD
 
 LANGCHAIN_TRACING_V2=True
 LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-LANGCHAIN_API_KEY="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"
 LANGCHAIN_PROJECT="bluu-dev"
 
 template = (
@@ -26,9 +29,28 @@ template = (
     "4. **Direct Data Only:** Your output should contain only the data that is explicitly requested, with no other text."
 )
 
-embeddings = OllamaEmbeddings(model="llama3.2")
+# Embeddings Settings
+embeddings = OllamaEmbeddings(
+    model="llama3.2"
+    # dimensions=4096
+    )
 llm = OllamaLLM(model='llama3.2')
-vector_store = InMemoryVectorStore(embeddings)
+
+# MongoDB Settings
+mongo_uri = f"mongodb+srv://admin:{MONGO_DB_PASSWORD}@cluster0.0xcvi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+mongo_client = MongoClient(mongo_uri)
+mongo_collection = mongo_client["test_db"]["test_embeddings"]
+
+vector_store = MongoDBAtlasVectorSearch(
+    embedding=embeddings,
+    collection=mongo_collection,
+    index_name="test_index",
+    relevance_score_fn="cosine",
+)
+# !! IMPORTANT: EITHER RUN THIS CODE OR DO MANUALLY ON ATLAS UI - FAILS ON DUPE CALLS
+# vector_store.create_vector_search_index(dimensions=3072)
+# vector_store = InMemoryVectorStore(embeddings)
+
 
 def parse_with_ollama(dom_chunks, parse_description):
     prompt = ChatPromptTemplate.from_template(template)
@@ -46,23 +68,27 @@ def parse_with_ollama(dom_chunks, parse_description):
         
     return '\n'.join(parsed_results)
 
-
 # Load and chunk contents of the blog
-loader = WebBaseLoader(
-    # web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
-    web_paths=("https://oldschool.runescape.wiki/w/Dragon_Slayer_I",),
-    bs_kwargs=dict(
-        parse_only=bs4.SoupStrainer(
-            # class_=("post-content", "post-title", "post-header")
-        )
-    ),
-)
-docs = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-all_splits = text_splitter.split_documents(docs)
+# loader = WebBaseLoader(
+#     # web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+#     web_paths=("https://oldschool.runescape.wiki/w/Dragon_Slayer_I",),
+#     bs_kwargs=dict(
+#         parse_only=bs4.SoupStrainer(
+#             # class_=("post-content", "post-title", "post-header")
+#         )
+#     ),
+# )
+# docs = loader.load()
 
-# Index chunks
-_ = vector_store.add_documents(documents=all_splits)
+# # Index chunks
+# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+
+# all_splits = text_splitter.split_documents(docs)
+# print(f"split: {all_splits[0]}")
+
+# doc_ids = vector_store.add_documents(documents=all_splits)
+# print(doc_ids)
+
 
 # Define prompt for question-answering
 # prompt = hub.pull("rlm/rag-prompt")
@@ -71,15 +97,21 @@ template = ("""You are an assistant for question-answering tasks. Use the follow
                 Context: {context} 
                 Answer:""")
 prompt = ChatPromptTemplate.from_template(template)
-question = "Summarized the article."
-retrieved_docs = vector_store.similarity_search(question)
-docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
-prompt = prompt.invoke({"question": question, "context": docs_content})
+
+
+query = "Provide a summary of the quest."
+retrieved_docs = vector_store.similarity_search(query)
+# print(f"retrived: {retrieved_docs}")
+# docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+# print(f"docs: {docs_content}")
+
+
+prompt = prompt.invoke({"question": query, "context": retrieved_docs})
 answer = llm.invoke(prompt)
 print(answer)
 
 
-
+"""
 # Define state for application
 # class State(TypedDict):
 #     question: str
@@ -98,3 +130,4 @@ print(answer)
 # graph_builder = StateGraph(State).add_sequence([retrieve, generate])
 # graph_builder.add_edge(START, "retrieve")
 # graph = graph_builder.compile()
+"""

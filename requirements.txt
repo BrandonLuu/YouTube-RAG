@@ -3,9 +3,12 @@ langchain-core
 langchain_ollama
 langchain-text-splitters
 langchain-community
+langchain_mongodb
+pymongo
+beautifulsoup4
+
 # streamlit
 # selenium
-# beautifulsoup4
 # lxml
 # html5lib
 # python-dotenv

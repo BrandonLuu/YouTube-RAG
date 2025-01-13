@@ -1,4 +1,4 @@
-from config import API_KEY
+from config import YOUTUBE_API_KEY
 import requests
 
 def get_channel_details(channel_name):
