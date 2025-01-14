@@ -43,14 +43,20 @@ from rag import *
 #             st.write(result)
 
 if __name__ == "__main__":
-    query = "Create a summary of the dragon slayer II quest."
-    
-    url = "https://oldschool.runescape.wiki/w/Dragon_Slayer_I"
-    url2 = "https://oldschool.runescape.wiki/w/Dragon_Slayer_II"
+    # query = "Create a summary of the dragon slayer II quest."
+    # url = "https://oldschool.runescape.wiki/w/Dragon_Slayer_I"
+    # url2 = "https://oldschool.runescape.wiki/w/Dragon_Slayer_II"
     # get_data_from_url(url)
     # get_data_from_url(url2)
+    # answer = retrieve_and_prompt(query)
+    
+    # yt_query = "what is the total view count for Channel5YouTube?"
+    # yt_query = "how many videos is there for Channel5YouTube?"
+    yt_query = "For Channel5YouTube sum the total comments for videos in the channel"
     
 
-    answer = retrieve_and_prompt(query)
+    # test_load_channel_stats()
+    answer = retrieve_and_prompt(yt_query)
+
     print()
     print(f"answer:\n{answer}")
