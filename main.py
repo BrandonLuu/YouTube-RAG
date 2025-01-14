@@ -1,43 +1,56 @@
 """
-AI Webscraper following tutorial from Youtube:
-https://youtu.be/Oo8-nEuDBkk
+Youtube Analytics RAG
+
+Provide a channel name for analytics extraction into an Ollama RAG
 """
-import streamlit as st
-from scrape import *
+
+from rag import *
+
+# if __name__ == '__main__':
+# import streamlit as st
+# from scrape import *
 # from scrape import (
 #     scrape_website, 
 #     split_dom_content, 
 #     clean_body_content,
 #     extract_body_content,
 # )
-from parse import parse_with_ollama
+#     st.title("AI Web Scraper")
+#     url = st.text_input("Enter URL:", 'https://www.example.com/')
 
-
-if __name__ == '__main__':
-    st.title("AI Web Scraper")
-    url = st.text_input("Enter URL:", 'https://www.example.com/')
-
-    if st.button("Scrape"):
-        st.write("Scraping website...")
-        result = scrape_website(url)
+#     if st.button("Scrape"):
+#         st.write("Scraping website...")
+#         result = scrape_website(url)
         
-        body_content = extract_body_content(result)
-        cleaned_content = clean_body_content(body_content)
+#         body_content = extract_body_content(result)
+#         cleaned_content = clean_body_content(body_content)
         
-        st.session_state.dom_content = cleaned_content
+#         st.session_state.dom_content = cleaned_content
         
-        with st.expander('View DOM Content'):
-            st.text_area('DOM Content', cleaned_content, height=300)
+#         with st.expander('View DOM Content'):
+#             st.text_area('DOM Content', cleaned_content, height=300)
         
-        # print(cleaned_content)
+#         # print(cleaned_content)
         
-    if 'dom_content' in st.session_state:
-        parse_description = st.text_area('Describe what you want to parse?')
+#     if 'dom_content' in st.session_state:
+#         parse_description = st.text_area('Describe what you want to parse?')
         
-        if st.button('Parse Content') and parse_description:
-            st.write('Parsing content...')
+#         if st.button('Parse Content') and parse_description:
+#             st.write('Parsing content...')
             
-            dom_chunks = split_dom_content(st.session_state.dom_content)
-            result = parse_with_ollama(dom_chunks, parse_description)
-            st.write(result)
-            
+#             dom_chunks = split_dom_content(st.session_state.dom_content)
+#             result = parse_with_ollama(dom_chunks, parse_description)
+#             st.write(result)
+
+if __name__ == "__main__":
+    query = "Create a summary of the dragon slayer II quest."
+    
+    url = "https://oldschool.runescape.wiki/w/Dragon_Slayer_I"
+    url2 = "https://oldschool.runescape.wiki/w/Dragon_Slayer_II"
+    # get_data_from_url(url)
+    # get_data_from_url(url2)
+    
+
+    answer = retrieve_and_prompt(query)
+    print()
+    print(f"answer:\n{answer}")
