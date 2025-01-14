@@ -51,12 +51,15 @@ if __name__ == "__main__":
     # answer = retrieve_and_prompt(query)
     
     # yt_query = "what is the total view count for Channel5YouTube?"
-    # yt_query = "how many videos is there for Channel5YouTube?"
-    yt_query = "For Channel5YouTube sum the total comments for videos in the channel"
-    
+    yt_query = "how many videos is there for Channel5YouTube?"
+    # yt_query = "For Channel5YouTube sum the total comments for videos in the channel"
+    # yt_query = "For Channel5YouTube what is the title of all the videos in January 2025?"
+    # yt_query = "what are the total number of videos for Channel5YouTube?"
+
 
     # test_load_channel_stats()
-    answer = retrieve_and_prompt(yt_query)
+    channel_name = "@Channel5YouTube"
+    get_and_load_channel_analytics(channel_name)
 
-    print()
-    print(f"answer:\n{answer}")
+    answer = retrieve_and_prompt(yt_query)
+    print(f"\nanswer:\n{answer}")
