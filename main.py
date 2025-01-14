@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     # test_load_channel_stats()
     channel_name = "@Channel5YouTube"
-    get_and_load_channel_analytics(channel_name)
+    # get_and_load_channel_analytics(channel_name)
 
     answer = retrieve_and_prompt(yt_query)
     print(f"\nanswer:\n{answer}")
