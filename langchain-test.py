@@ -1,24 +1,21 @@
-from langchain_ollama import OllamaLLM, OllamaEmbeddings
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.vectorstores import InMemoryVectorStore
-
-import bs4
 from langchain import hub
 from langchain_community.document_loaders import WebBaseLoader
-# from langchain_.vectorstores import MongoDBAtlasVectorSearch
-from langchain_mongodb import MongoDBAtlasVectorSearch
 from langchain_core.documents import Document
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_mongodb import MongoDBAtlasVectorSearch
+from langchain_ollama import OllamaLLM, OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-# from langgraph.graph import START, StateGraph
 from pymongo import MongoClient
 from typing_extensions import List, TypedDict
+import bs4
 
-from config import LANGCHAIN_API_KEY 
 from config import MONGO_DB_PASSWORD
 
-LANGCHAIN_TRACING_V2=True
-LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-LANGCHAIN_PROJECT="bluu-dev"
+# from config import LANGCHAIN_API_KEY 
+# LANGCHAIN_TRACING_V2=True
+# LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+# LANGCHAIN_PROJECT="bluu-dev"
 
 template = (
     "You are tasked with extracting specific information from the following text content: {dom_content}. "
