@@ -50,16 +50,21 @@ if __name__ == "__main__":
     # get_data_from_url(url2)
     # answer = retrieve_and_prompt(query)
     
+
+    # yt_query = "What is the name of the youtube channel?"
     # yt_query = "what is the total view count for Channel5YouTube?"
-    yt_query = "how many videos is there for Channel5YouTube?"
-    # yt_query = "For Channel5YouTube sum the total comments for videos in the channel"
+    # yt_query = "Count how many videos there are for Channel5YouTube."
+    yt_query = "For Channel5YouTube calculate the total comments for videos in the channel"
     # yt_query = "For Channel5YouTube what is the title of all the videos in January 2025?"
     # yt_query = "what are the total number of videos for Channel5YouTube?"
-
+    # yt_query = "What are the topics for Channel5Youtube?"
+    # yt_query = "What is the total subscriber count for Channel5Youtube?"
+    
 
     # test_load_channel_stats()
     channel_name = "@Channel5YouTube"
     # get_and_load_channel_analytics(channel_name)
 
-    answer = retrieve_and_prompt(yt_query)
+    # answer = retrieve_and_prompt(yt_query)
+    answer = test_retrieve_and_prompt(yt_query)
     print(f"\nanswer:\n{answer}")
