@@ -73,6 +73,48 @@ def get_video_stats(video_ids):
         print(response.json())
         return None
 
+def get_video_comments(video_id):
+    """
+    Fetch youtube video comments by video_id ordered by time.
+    """
+    try:
+        url = "https://www.googleapis.com/youtube/v3/commentThreads"
+        params = {
+            "part": "snippet",
+            "videoId": video_id,
+            "maxResults": 2,
+            "order": "time",
+            "textFormat": "plainText",
+            "key": YOUTUBE_API_KEY,
+        }
+        
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        comments = []
+        for item in data.get("items", []):
+            comment = item["snippet"]["topLevelComment"]["snippet"]["textDisplay"]
+            comments.append(comment)
+        return comments
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching video statistics: {e}")
+        print(response.json())
+        return None
+
+
+def save_comments(video_id):
+    """
+    Fetch 100 video comments for a specified video_id
+    """
+    video_comments = {}
+    video_comments["video_id"] = video_id
+    video_comments["video_title"] = get_video_stats(video_id)[ the field for title]
+    video_comments["comments"] = get_video_comments(video_id)
+
+    return video_comments
+
 
 def get_channel_analytics(channel_name):
     """
@@ -143,6 +185,7 @@ def get_channel_analytics(channel_name):
     return channel_analytics
 
 
+
 def test_youtube_fetcher_load_videos_stats():
     # TEST: load channel data
     channel_id = "UC-AQKm7HUNMmxjdS371MSwg"
@@ -157,7 +200,18 @@ def test_youtube_fetcher_load_videos_stats():
 
 
 if __name__ == "__main__":
-    channel_name = "@Channel5YouTube"
-    analytics = get_channel_analytics(channel_name)
-    # pprint.pprint(analytics)
-    print(analytics)
+    def test_get_analytics():
+        channel_name = "@Channel5YouTube"
+        analytics = get_channel_analytics(channel_name)
+        # pprint.pprint(analytics)
+        print(analytics)
+
+    def test_get_comments():
+        # https://www.youtube.com/watch?v=yiW_dfnaeEQ
+        video_id = "yiW_dfnaeEQ"
+        
+        comments = get_video_comments(video_id)
+        print(comments)
+
+    # print(get_channel_details("@Channel5YouTube"))
+    test_get_comments()
