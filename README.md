@@ -1,4 +1,3 @@
-# rag
 <h1>Youtube Channel Analytics and Comments RAG </h1>
 
 <h3>Core:<h3>

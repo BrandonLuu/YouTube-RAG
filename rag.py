@@ -11,6 +11,7 @@ import ast
 import bs4
 import json
 import time
+import os
 
 from youtube_fetcher import get_channel_analytics, get_video_comments
 
@@ -252,7 +253,9 @@ def test_load_channel_analytics_from_file(channel_name):
     print(f"Fetching and Adding Channel Stats for {channel_name}")
 
     # Read dict from file
-    with open("analytics-sample.txt", "r", encoding="utf-8") as f:
+    cur_path = os.path.dirname(__file__)
+    sample_file = os.path.join(cur_path, "test_data", "analytics-sample.txt")
+    with open(sample_file, "r", encoding="utf-8") as f:
         analytics = f.read()
     analytics = ast.literal_eval(analytics) 
     
@@ -413,4 +416,4 @@ if __name__ == "__main__":
     # print(ans)
 
     # test_bart_model()
-    ...
+    

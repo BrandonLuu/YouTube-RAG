@@ -9,9 +9,3 @@ beautifulsoup4
 
 # transformers
 # torch
-
-# streamlit
-# selenium
-# lxml
-# html5lib
-# python-dotenv
