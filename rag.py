@@ -407,7 +407,7 @@ def test_bart_model():
 """
 
 # Testing
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # test_load_channel_analytics_from_file("@Channel5Youtube")
     
     # ans = test_analytics_retrieve_and_prompt()
@@ -416,4 +416,4 @@ if __name__ == "__main__":
     # print(ans)
 
     # test_bart_model()
-    ...
+    # ...
