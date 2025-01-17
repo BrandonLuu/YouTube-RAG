@@ -7,6 +7,9 @@ langchain_mongodb
 pymongo
 beautifulsoup4
 
+# transformers
+# torch
+
 # streamlit
 # selenium
 # lxml

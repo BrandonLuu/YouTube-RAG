@@ -73,16 +73,20 @@ def get_video_stats(video_ids):
         print(response.json())
         return None
 
-def get_video_comments(video_id):
+
+def get_video_comments(video_id, max_results=10):
     """
-    Fetch youtube video comments by video_id ordered by time.
+    Fetch youtube video comments by video_id ordered by time. 
+    Args:
+    video_id : youtube video ID - dQw4w9WgXcQ from url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    max_results: number of comments to fetch
     """
     try:
         url = "https://www.googleapis.com/youtube/v3/commentThreads"
         params = {
             "part": "snippet",
             "videoId": video_id,
-            "maxResults": 2,
+            "maxResults": max_results,
             "order": "time",
             "textFormat": "plainText",
             "key": YOUTUBE_API_KEY,
@@ -104,18 +108,6 @@ def get_video_comments(video_id):
         return None
 
 
-def save_comments(video_id):
-    """
-    Fetch 100 video comments for a specified video_id
-    """
-    video_comments = {}
-    video_comments["video_id"] = video_id
-    video_comments["video_title"] = get_video_stats(video_id)[ the field for title]
-    video_comments["comments"] = get_video_comments(video_id)
-
-    return video_comments
-
-
 def get_channel_analytics(channel_name):
     """
     Fetch channel analytics
@@ -133,21 +125,8 @@ def get_channel_analytics(channel_name):
         print(channel_details)
         print(channel_id)
 
-    # TEST: load channel data
-    # channel_id = "UC-AQKm7HUNMmxjdS371MSwg"
-    # channel_statistics = {"viewCount": "233328383","subscriberCount": "2870000","hiddenSubscriberCount": False,"videoCount": "91",}
-
     channel_analytics["channel_id"] = channel_id
     channel_analytics["channel_statistics"] = channel_statistics
-
-
-    # TEST: load video data
-    # video_ids = ['yiW_dfnaeEQ', 'WBwGX2ky3BQ']
-    # video_stats = """{"kind": "youtube#videoListResponse", "etag": "Ilk-0dsUG51DfRGkVPdJz0duc4w", "items": [{"kind": "youtube#video", "etag": 
-    # "LZvdJsD4ZZaXa74wd7i-_81cmLQ", "id": "yiW_dfnaeEQ", "snippet": {"publishedAt": "2025-01-10T22:55:41Z", "channelId": "UC-AQKm7HUNMmxjdS371MSwg", "title": "LA Wildfires", "description": "Email to reach Estrada and family: estrada_s@yahoo.com\nZelle to send funds to Ms. Espinoza, who we interviewed at the end: l_espinoza68@yahoo.com", "thumbnails": {"default": {"url": "https://i.ytimg.com/vi/yiW_dfnaeEQ/default.jpg", "width": 120, "height": 90}, "medium": {"url": "https://i.ytimg.com/vi/yiW_dfnaeEQ/mqdefault.jpg", "width": 320, "height": 180}, "high": {"url": "https://i.ytimg.com/vi/yiW_dfnaeEQ/hqdefault.jpg", "width": 480, "height": 360}, "standard": {"url": "https://i.ytimg.com/vi/yiW_dfnaeEQ/sddefault.jpg", "width": 
-    # 640, "height": 480}, "maxres": {"url": "https://i.ytimg.com/vi/yiW_dfnaeEQ/maxresdefault.jpg", "width": 1280, "height": 720}}, "channelTitle": "Channel 5 with Andrew Callaghan", "categoryId": "22", "liveBroadcastContent": "none", "localized": {"title": "LA Wildfires", "description": "Email to reach Estrada and family: estrada_s@yahoo.com\nZelle to send funds to Ms. Espinoza, who we interviewed at the end: l_espinoza68@yahoo.com"}, "defaultAudioLanguage": "en"}, "statistics": {"viewCount": "1554134", "likeCount": "58952", "favoriteCount": "0", "commentCount": "6718"}}, {"kind": "youtube#video", "etag": "xzPoDOmrQvu7ojLxiTToHMHeX4c", "id": "WBwGX2ky3BQ", "snippet": {"publishedAt": "2025-01-06T20:25:59Z", "channelId": "UC-AQKm7HUNMmxjdS371MSwg", "title": "Justice for J6 Rally (Dear Kelly Scene)", "description": "This is a scene from our upcoming movie, 'Dear Kelly,' which will release on January 15: https://youtu.be/6Nb7NNUlsHM", "thumbnails": {"default": {"url": "https://i.ytimg.com/vi/WBwGX2ky3BQ/default.jpg", "width": 120, "height": 90}, "medium": {"url": "https://i.ytimg.com/vi/WBwGX2ky3BQ/mqdefault.jpg", "width": 320, "height": 180}, "high": {"url": "https://i.ytimg.com/vi/WBwGX2ky3BQ/hqdefault.jpg", "width": 480, "height": 360}, "standard": {"url": "https://i.ytimg.com/vi/WBwGX2ky3BQ/sddefault.jpg", "width": 640, "height": 480}, "maxres": {"url": "https://i.ytimg.com/vi/WBwGX2ky3BQ/maxresdefault.jpg", "width": 1280, "height": 720}}, "channelTitle": "Channel 5 with Andrew Callaghan", "categoryId": "22", "liveBroadcastContent": "none", "localized": {"title": "Justice for J6 Rally (Dear Kelly Scene)", "description": "This is a scene from our upcoming movie, 'Dear Kelly,' which will release on January 15: https://youtu.be/6Nb7NNUlsHM"}, "defaultAudioLanguage": "en"}, "statistics": {"viewCount": "342992", "likeCount": "9974", "favoriteCount": "0", "commentCount": "1832"}}], "pageInfo": {"totalResults": 2, "resultsPerPage": 2}}"""
-    # video_stats = json.loads(video_stats, strict=False)
-
 
     # ===== Step 2: Get last 50 videos =====
     print("\nFetching last 50 videos...")
@@ -181,9 +160,7 @@ def get_channel_analytics(channel_name):
 
         channel_analytics["videos"].append(details)
 
-    # channel_analytics = {'username': '@Channel5YouTube', 'channel_id': 'UC-AQKm7HUNMmxjdS371MSwg', 'channel_statistics': {'viewCount': '233328383', 'subscriberCount': '2870000', 'hiddenSubscriberCount': False, 'videoCount': '91'}, 'videos': [{'id': 'yiW_dfnaeEQ', 'title': 'LA Wildfires', 'description': 'Email to reach Estrada and family: estrada_s@yahoo.com\nZelle to send funds to Ms. Espinoza, who we interviewed at the end: l_espinoza68@yahoo.com', 'publishedAt': '2025-01-10T22:55:41Z', 'statistics': {'viewCount': '1554134', 'likeCount': '58952', 'favoriteCount': '0', 'commentCount': '6718'}}, {'id': 'WBwGX2ky3BQ', 'title': 'Justice for J6 Rally (Dear Kelly Scene)', 'description': "This is a scene from our upcoming movie, 'Dear Kelly,' which will release on January 15: https://youtu.be/6Nb7NNUlsHM", 'publishedAt': '2025-01-06T20:25:59Z', 'statistics': {'viewCount': '342992', 'likeCount': '9974', 'favoriteCount': '0', 'commentCount': '1832'}}]}
     return channel_analytics
-
 
 
 def test_youtube_fetcher_load_videos_stats():
@@ -200,6 +177,9 @@ def test_youtube_fetcher_load_videos_stats():
 
 
 if __name__ == "__main__":
+    """
+    Testing Code
+    """
     def test_get_analytics():
         channel_name = "@Channel5YouTube"
         analytics = get_channel_analytics(channel_name)
