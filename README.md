@@ -28,6 +28,12 @@ YT Videos Docs: https://developers.google.com/youtube/v3/docs/videos
 YT Comments Docs: https://developers.google.com/youtube/v3/docs/comments
 
 </br>
+<h3>Architecture</h3>
+
+![alt text](rag-diagram.png)
+
+Diagram for channel video analytics flow with a similar flow for comment analytics.
+Image modified from MongoDB Docs.
 
 <h3>Files:</h3>
 
