@@ -44,10 +44,3 @@ youtube_fetch.py - calls youtube APIs to fetch data
 rag.py - fetches yt data, saves into MongoDB, runs LLM using langchain
 
 config_keys.py - rename to config.py and add API keys
-
-</br>
-<h4> Current Limitations and Future Scope </h4>
-
-- Llama3.2 base model loses query focus if input context is too big (>14 video stats or >10 youtube comments)
-- Document retrieval on comments gets mismatched to channel analytics
-- Consider switching to different LLM work flow with trained LLMs. There is some sample/text code for HuggingFaces models that showed better preliminary results than Llama3.2 base model.
