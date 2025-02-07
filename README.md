@@ -6,7 +6,21 @@
 - DB: MongoDB Atlas
 
 </br>
-<h3>Functionalities:</h3>
+<h3>Overview</h3>
+This project aimed to enable customizable natural language queries for YouTube analytics with sentiment and trend analysis.
+
+By leveraging an LLM and Retrieval-Augmented Generation (RAG) with the YouTube Data API, accurate data retrieval allowed users to query/perform the following:
+
+- What is the general topic or subject matter of this channel?
+
+- What keywords or phrases are most commonly associated with the channel's content?
+
+- Provide a statistical overview of the content (likes, comments, views, video length, and upload date).
+
+- Summarize the sentiment of the comments for a specific video.
+
+
+<h3>Analytic Types:</h3>
 
 <h4>1. Provide a youtube channel name (@TED, @RickAstleyYT, etc.) for video analytics on the latest 50 videos </h4>
 
