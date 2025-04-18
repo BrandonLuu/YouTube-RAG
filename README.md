@@ -9,7 +9,7 @@
 <h3>Overview</h3>
 This project aimed to enable customizable natural language queries for YouTube analytics with sentiment and trend analysis.
 
-By leveraging an LLM and Retrieval-Augmented Generation (RAG) with the YouTube Data API, accurate data retrieval allowed users to query/perform the following:
+By leveraging an LLM and Retrieval-Augmented Generation (RAG) with the YouTube Data API, users can query/perform the questions such as:
 
 - What is the general topic or subject matter of this channel?
 
